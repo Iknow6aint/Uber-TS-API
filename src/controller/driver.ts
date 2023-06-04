@@ -1,5 +1,5 @@
 import { getRideById } from './../db/ride';
-import { createDriver } from './../db/driver';
+import { createDriver, DriverModel } from './../db/driver';
 import { deleteDriverById, getDriver, getDriverById, updateDriverById } from './../db/Driver';
 import express from 'express'
 
@@ -25,6 +25,7 @@ export const getADriver = async (req: express.Request, res: express.Response) =>
         return res.sendStatus(400)
     }
 }
+//delete driver
 
 export const deleteDriver = async (req: express.Request, res: express.Response) => {
     try {
@@ -36,6 +37,7 @@ export const deleteDriver = async (req: express.Request, res: express.Response) 
         return res.sendStatus(400)
     }
 }
+// update driver
 export const updateDriver = async (req: express.Request, res: express.Response) => {
     try {
         const { id } = req.params;
@@ -59,26 +61,24 @@ export const createNewDriver = async (req: express.Request, res: express.Respons
 }
 
 // get available Drivers
-// export const getAvailableDrivers = async (req: express.Request, res: express.Response): Promise<void> => {
-//     try {
-//         // Logic to retrieve available drivers
-//         const availableDrivers = await getDriver({ isAvailable : true})
-//         if (availableDrivers.isAvailable){
-
-//         }
-//         res.json(availableDrivers);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
+export const getAvailableDrivers = async (req: express.Request, res: express.Response): Promise<void> => {
+    try {
+        // Logic to retrieve available drivers
+        const availableDrivers = await DriverModel.find({ isAvailable: true })
+        res.json(availableDrivers);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 
 export const assignDriver = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
         // ride was passed as body
-        const { rideId, driverId } = req.body;
+        const { id } = req.params;
+        const { driverId } = req.body;
 
-        const ride = await getRideById(rideId);
+        const ride = await getRideById(id);
         if (!ride) {
             res.status(404).json({ message: 'Ride not found' });
             return;
@@ -105,8 +105,8 @@ export const acceptRide = async (req: express.Request, res: express.Response): P
     try {
         //ride was passed as params
         const { driverId } = req.body;
-        const { rideId } = req.params;
-        const ride = await getRideById(rideId);
+        const { id } = req.params;
+        const ride = await getRideById(id);
         if (!ride) {
             res.status(404).json({ message: 'Ride not found' });
             return;
