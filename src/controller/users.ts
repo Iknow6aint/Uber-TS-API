@@ -1,3 +1,4 @@
+import { getRideById, RideModel } from './../db/ride';
 import { deleteUserById, getUserById, getUsers, updateUserById } from './../db/users';
 import express from 'express'
 
@@ -43,3 +44,25 @@ export const updateUser = async (req: express.Request, res: express.Response) =>
         return res.sendStatus(400)
     }
 }
+
+export const getUserRides = async (req: express.Request, res: express.Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        const rides = await RideModel.find({ user: id });
+        res.json(rides);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getUserCompletedRides = async (req: express.Request, res: express.Response): Promise<void> => {
+    try {
+        const { userId } = req.params;
+
+        const completedRides = await RideModel.find({ user: userId, status: 'Completed' });
+        res.json(completedRides);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

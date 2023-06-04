@@ -18,7 +18,7 @@ const driverSchema = new mongoose.Schema({
         }
     ],
     number: { type: Number, required: true },
-    driverStatus: {
+    Status: {
         type: String,
         default: 'Available',
         enum: [
@@ -26,7 +26,7 @@ const driverSchema = new mongoose.Schema({
             "On a ride",
             "Processing",
             "Dispatched",
-            "Cancelled",
+            "Rejected",
             "Arrived"
         ]
     },
@@ -40,7 +40,11 @@ const driverSchema = new mongoose.Schema({
                 ref: 'Ride'
             }
         }
-    ]
+    ],
+    isAvailable: {
+        type: Boolean,
+        default: false,
+    }
 
 });
 export const DriverModel = mongoose.model('Driver', driverSchema);

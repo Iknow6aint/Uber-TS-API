@@ -16,7 +16,8 @@ var rideSchema = new mongoose.Schema({
         enum: [
             "Accepted",
             "Requested",
-            "Processing",
+            "Ongoing",
+            "Completed",
             "Dispatched driver",
             "Cancelled",
             "Arrived"
@@ -29,7 +30,7 @@ var rideSchema = new mongoose.Schema({
         type: String
     },
     disCount: Number,
-    orderby: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
